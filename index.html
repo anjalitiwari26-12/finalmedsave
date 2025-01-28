@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSave</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo"><a href="index.html"><img src="logo.png" width="200" height="45" alt="logo"></a></div>
+        <div class="top-buttons">
+            <div class="left-buttons">
+                <button onclick="openPopup('login-popup')">Login</button>
+                <button onclick="openPopup('registration-popup')">Registration</button>
+                <button onclick="scrollToFooter()">Contact Us</button>
+            </div>
+            <script>
+
+                // Function to open a popup
+                function openSellingPopup(catId) {
+                    console.log("Popup triggered with catId:", catId); // Debugging
+                    const popup = document.getElementById('selling-popup');
+                    const catIdField = document.getElementById('sell-cat-id');
+                    if (!popup || !catIdField) {
+                        console.error("Popup or catIdField not found in the DOM.");
+                        return;
+                    }
+                    catIdField.value = catId;
+                    popup.style.display = 'block';
+                }
+
+
+                // Function to close a popup
+                function closeSellingPopup() {
+                    document.getElementById('selling-popup').style.display = 'none';
+                }
+
+                // Toggle Dropdown Menu
+                function toggleDropdown(event) {
+                    const dropdown = event.currentTarget;
+                    dropdown.classList.toggle('open');
+                }
+
+                // Close Popups when clicked outside the popup content
+                document.addEventListener('DOMContentLoaded', () => {
+                    const popups = document.querySelectorAll('.popup');
+                    popups.forEach(popup => {
+                        popup.addEventListener('click', event => {
+                            if (event.target === popup) {
+                                popup.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+            </script>
+            <div class="dropdown" onclick="toggleDropdown(event)">
+                <button class="selling-button">Selling</button>
+                <div class="dropdown-content">
+                    <button onclick="openSellingPopup(1)">Wheelchair</button>
+                    <button onclick="openSellingPopup(2)">Orthopedic Support</button>
+                    <button onclick="openSellingPopup(3)">Medical Monitoring</button>
+                    <button onclick="openSellingPopup(4)">Respiratory Aids</button>
+                    <button onclick="openSellingPopup(5)">Beds and Bedding</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Selling Popup -->
+
+    <div id="selling-popup" class="popup">
+        <div class="popup-content">
+            <h2>Sell Product</h2>
+            <form id="sell-product-form" method="POST" action="post_ad.php" enctype="multipart/form-data">
+                <input type="hidden" id="sell-cat-id" name="cat_id">
+
+                <label for="sell-user-id">User ID <span class="required">*</span></label>
+                <input type="text" id="sell-user-id" name="user_id" required>
+                <!-- Example user_id -->
+
+                <label for="sell-name">Product Name <span class="required">*</span></label>
+                <input type="text" id="sell-name" name="name" required>
+
+                <label for="sell-image">Product Image <span class="required">*</span></label>
+                <input type="file" id="sell-image" name="image" accept="image/*" required>
+
+                <label for="sell-description">Description <span class="required">*</span></label>
+                <textarea id="sell-description" name="description" rows="4" required></textarea>
+
+                <label for="sell-usage-duration">Usage Duration(in months) <span class="required">*</span></label>
+                <input type="text" id="sell-usage-duration" name="usage_duration" required>
+
+                <label for="sell-price">Price (₹) (Zero if you want to donate) <span class="required">*</span></label>
+                <input type="number" id="sell-price" name="price" step="100" required>
+
+                <div class="buttons">
+                    <button type="submit">Submit</button>
+                    <button type="reset">Clear</button>
+                    <button type="button" onclick="closePopup('selling-popup')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <style>
+        #selling-popup {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            display: none;
+            /* Ensure it starts hidden */
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .selling-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .selling-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    </header>
+
+
+    <main>
+        <div class="slider">
+            <img src="slide1.png" alt="Slider Image 1">
+
+        </div>
+
+        <!-- Dynamic Categories Section -->
+        <div class="categories" id="categories-container">
+            <!-- Categories will be dynamically loaded here -->
+        </div>
+
+    </main>
+
+    <footer id="footer">
+        <div class="footer-top">&copy; 2024 MedSave. All rights reserved.</div>
+        <div class="footer-bottom">Designed by MedSave Team</div>
+    </footer>
+
+    <!-- Login Popup -->
+    <div id="login-popup" class="popup">
+        <div class="popup-content">
+            <h2>Login</h2>
+            <form id="login-form" method="POST" action="login.php">
+                <label for="login-user-id">User ID <span class="required">*</span></label>
+                <input type="text" id="login-user-id" name="user_id" required>
+                <div id="login-user-id-error" class="error-message"></div>
+
+                <label for="login-password">Password <span class="required">*</span></label>
+                <input type="password" id="login-password" name="password" required>
+                <div id="login-password-error" class="error-message"></div>
+
+                <a href="javascript:void(0);"
+                    onclick="openPopup('forgot-password-popup'); closePopup('login-popup')">Forgot Password?</a>
+
+                <div class="login-footer">
+                    Don't have an account?<a href="javascript:void(0);"
+                        onclick="openPopup('registration-popup'); closePopup('login-popup')">Register</a>
+                </div>
+
+                <div class="buttons">
+                    <button type="submit">Login</button>
+                    <button type="button" onclick="closePopup('login-popup')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Registration Popup -->
+    <div id="registration-popup" class="popup">
+        <div class="popup-content">
+            <h2>Registration</h2>
+            <form action="register.php" method="POST" onsubmit="return validateRegistration()">
+                <input type="hidden" name="mode" value="register">
+
+                <label for="first-name">First Name <span class="required">*</span></label>
+                <input type="text" id="first-name" name="firstName" required aria-describedby="first-name-error">
+                <div id="first-name-error" class="error-message"></div>
+
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="lastName">
+
+                <label for="user-id">User ID <span class="required">*</span></label>
+                <input type="text" id="user-id" name="user_id" required aria-describedby="user-id-error">
+                <div id="user-id-error" class="error-message"></div>
+
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required aria-describedby="email-error">
+                <div id="email-error" class="error-message"></div>
+
+                <label for="password">Password <span class="required">*</span></label>
+                <input type="password" id="password" name="password" required aria-describedby="password-error"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                    title="Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.">
+                <div id="password-error" class="error-message"></div>
+
+                <label for="confirm-password">Confirm Password <span class="required">*</span></label>
+                <input type="password" id="confirm-password" name="confirmPassword" required
+                    aria-describedby="confirm-password-error">
+                <div id="confirm-password-error" class="error-message"></div>
+
+                <label for="contact-number">Contact Number <span class="required">*</span></label>
+                <input type="number" id="contact-number" name="contact" required aria-describedby="contact-error"
+                    pattern="\d{10}" title="Contact number must be exactly 10 digits.">
+                <div id="contact-error" class="error-message"></div>
+
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address">
+
+                <div class="buttons">
+                    <button type="submit">Register</button>
+                    <button type="reset">Clear All</button>
+                    <button type="button" onclick="closePopup('registration-popup')">Back</button>
+                </div>
+            </form>
+            <div class="registration-footer">
+                <p>Already have an account? <a href="javascript:void(0);"
+                        onclick="openPopup('login-popup'); closePopup('registration-popup')">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Popup -->
+    <!-- Forgot Password Popup -->
+    <div id="forgot-password-popup" class="popup">
+        <div class="popup-content">
+            <h2>Forgot Password?</h2>
+            <label for="forgot-email">Email <span class="required">*</span></label>
+            <input type="email" id="forgot-email">
+            <div id="forgot-email-error" class="error-message"></div>
+            <button onclick="sendOTP()">Send OTP</button>
+            <p id="otp-message"></p>
+            <label for="otp">Enter OTP</label>
+            <input type="text" id="otp">
+            <button onclick="submitOTP()">Submit</button>
+            <button onclick="closePopup('forgot-password-popup'); openPopup('login-popup')">Back</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle "Send OTP" button click
+        function sendOTP() {
+            alert("Send OTP functionality is under process.");
+        }
+
+        // Function to handle "Submit OTP" button click
+        function submitOTP() {
+            alert("Submit OTP functionality is under process.");
+        }
+
+        // Function to handle popup display logic
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        function openPopup(popupId) {
+            document.getElementById(popupId).style.display = 'block';
+        }
+    </script>
+
+
+    <script>
+        // Fetch categories dynamically
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('fetch_categories.php')
+                .then(response => response.json())
+                .then(categories => {
+                    console.log("Categories fetched:", categories); // Debug here
+                    const container = document.getElementById('categories-container');
+                    categories.forEach(category => {
+                        if (category.cat_id) { // Ensure cat_id exists
+                            const categoryDiv = document.createElement('div');
+                            categoryDiv.classList.add('category');
+                            categoryDiv.innerHTML = `
+                        <a href="category_products.php?cat_id=${category.cat_id}">
+                            <img src="${category.image}" alt="${category.name}">
+                        </a><br>
+                        <a href="category_products.php?cat_id=${category.cat_id}">${category.name}</a>
+                    `;
+                            container.appendChild(categoryDiv);
+                        } else {
+                            console.error("Missing cat_id for:", category);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching categories:', error));
+        });
+
+        // Scroll to footer when "Contact Us" is clicked
+        function scrollToFooter() {
+            document.getElementById('footer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Toggle dropdown visibility
+        function toggleDropdown(event) {
+            const dropdown = event.currentTarget;
+            dropdown.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>
